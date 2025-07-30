@@ -1,0 +1,16 @@
+i am the best version of myself and i will keep on pushing myself to become the most coolest guy around here
+
+//backtracking 
+1....   whenever u solve the permutation or other question where u need to explore all the soln then find the relevand ones then apply this 
+
+2....   u explore all the paths from the given point 
+
+3....   so there are 2 cases
+a....   when u need only one specific ans from all the combo so whenever u check if u got it then just return a true from the boolean helper function then if the next recursoin call sees that it is true then it will stop further and will call out the ans only
+b....   in normal cases just check the condn and maintain the visidted array if req.....then acc to that travel the whole thing again and again for the current char at that postition thats all 
+add the element again call the backtracking method 
+//and then again in that call for the prev added element u explore all the possibilities for the current element
+
+
+
+//baaki experience is the key

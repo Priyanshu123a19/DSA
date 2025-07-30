@@ -1,0 +1,79 @@
+//remember the edge cases of frist seeing that the first place itself is not 0 then u cant travel anywhere
+//if its open then make the visited 1 at R=0 and C=0  thats all baaki aage recursion and backtracking
+// always remember that the current postions are not to be sent by ref just send the normal vals as they get updated
+//just make the moves array lexographically 
+
+
+//gfg questoin available
+
+
+
+class Solution {
+    
+  public:
+    void helper(string &current,vector<vector<int>>& maze,vector<string>&paths,vector<char>moves,int R,int C, vector<vector<int>>&visited){
+        //base case
+        if(R==maze.size()-1 && C==maze[0].size()-1){
+            //pushing the current ans 
+            paths.push_back(current);
+            return;
+        }
+        
+        for(int i=0;i<moves.size();i++){
+            //here we want to see that the current path is free to be taken or not
+            if(moves[i]=='U'){
+                if(R-1>=0 && maze[R-1][C]==1 && visited[R-1][C]==0){
+                    current.push_back('U');
+                    visited[R-1][C]=1;
+                    //recursive call
+                    helper(current,maze,paths,moves,R-1,C,visited);
+                    current.pop_back();
+                    visited[R-1][C]=0;
+                }
+            }else if(moves[i]=='D'){
+                if(R+1<maze.size() && maze[R+1][C]==1 && visited[R+1][C]==0){
+                    current.push_back('D');
+                    visited[R+1][C]=1;
+                    //recursive call
+                    helper(current,maze,paths,moves,R+1,C,visited);
+                    current.pop_back();
+                    visited[R+1][C]=0;
+                }
+            }else if(moves[i]=='L'){
+                if(C-1>=0 && maze[R][C-1]==1 && visited[R][C-1]==0){
+                    current.push_back('L');
+                    visited[R][C-1]=1;
+                    //recursive call
+                    helper(current,maze,paths,moves,R,C-1,visited);
+                    current.pop_back();
+                    visited[R][C-1]=0;
+                }
+            }else if(moves[i]=='R'){
+                if(C+1<maze[0].size() && maze[R][C+1]==1 && visited[R][C+1]==0){
+                    current.push_back('R');
+                    visited[R][C+1]=1;
+                    //recursive call
+                    helper(current,maze,paths,moves,R,C+1,visited);
+                    current.pop_back();
+                    visited[R][C+1]=0;
+                }
+            }
+        }
+    }
+    vector<string> ratInMaze(vector<vector<int>>& maze) {
+        // code here
+        int n = maze.size();
+        vector<string>paths;
+        if(maze[0][0]==0){
+            return paths;
+        }
+        vector<char>moves={'D','L','R','U'};
+        string current;
+        int currR=0;
+        int currC=0;
+        vector<vector<int>>visited(n,vector<int>(n,0));
+        visited[0][0]=1;
+        helper(current,maze,paths,moves,currR,currC,visited);
+        return paths;
+    }
+};
