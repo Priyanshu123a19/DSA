@@ -1,0 +1,5 @@
+1....
+in the backtracking problem involving the combination
+then remember to know that there unique pairs and everything comes into play
+//so start playing with a bit iteration var as well
+//send a var to helper fucntion everytime at recursion call to specfify where to start from in the next upcoming call
