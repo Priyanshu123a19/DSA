@@ -1,0 +1,75 @@
+problem statement......
+
+Given a string s, you can transform every letter individually to be lowercase or uppercase to create another string.
+
+Return a list of all possible strings we could create. Return the output in any order.
+
+ 
+
+Example 1:
+
+Input: s = "a1b2"
+Output: ["a1b2","a1B2","A1b2","A1B2"]
+
+Example 2:
+
+Input: s = "3z4"
+Output: ["3z4","3Z4"]
+
+ 
+
+Constraints:
+
+    1 <= s.length <= 12
+    s consists of lowercase English letters, uppercase English letters, and digits.
+
+
+
+answer........
+
+class Solution {
+public:
+    void helper(vector<string>&ans,string &current,int index,string s){
+        //now over here we can make sure that we can get the value of the 
+        //base case
+        if(current.size()==s.size()){
+            ans.push_back(current);
+            return;
+        }
+
+        if('0'<=s[index] && s[index]<='9'){
+            current.push_back(s[index]);
+            helper(ans,current,index+1,s);
+            current.pop_back();
+        }
+
+        else{
+            current.push_back(s[index]);
+            helper(ans,current,index+1,s);
+            current.pop_back();
+            //now second call 
+            if('a'<=s[index] && s[index]<='z'){
+                char temp=s[index]-'a'+'A';
+                current.push_back(temp);
+                helper(ans,current,index+1,s);
+                current.pop_back();
+            }else{
+                char temp=s[index]-'A'+'a';
+                current.push_back(temp);
+                helper(ans,current,index+1,s);
+                current.pop_back();
+            }
+        }
+       
+    }
+    vector<string> letterCasePermutation(string s) {
+        //algo
+        //1 make the ans array and the current array
+        //2 then call helper function 
+        vector<string>ans;
+        string current;
+        int index=0;
+        helper(ans,current,index,s);
+        return ans;
+    }
+};
