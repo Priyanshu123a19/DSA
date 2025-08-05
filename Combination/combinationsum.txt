@@ -1,0 +1,93 @@
+problem
+39. Combination Sum
+Solved
+Medium
+Topics
+premium lock iconCompanies
+
+Given an array of distinct integers candidates and a target integer target, return a list of all unique combinations of candidates where the chosen numbers sum to target. You may return the combinations in any order.
+
+The same number may be chosen from candidates an unlimited number of times. Two combinations are unique if the
+
+of at least one of the chosen numbers is different.
+
+The test cases are generated such that the number of unique combinations that sum up to target is less than 150 combinations for the given input.
+
+ 
+
+Example 1:
+
+Input: candidates = [2,3,6,7], target = 7
+Output: [[2,2,3],[7]]
+Explanation:
+2 and 3 are candidates, and 2 + 2 + 3 = 7. Note that 2 can be used multiple times.
+7 is a candidate, and 7 = 7.
+These are the only two combinations.
+
+Example 2:
+
+Input: candidates = [2,3,5], target = 8
+Output: [[2,2,2,2],[2,3,3],[3,5]]
+
+Example 3:
+
+Input: candidates = [2], target = 1
+Output: []
+
+
+tips..
+remember that we always need to use the temp arrya before sorting it 
+//because sorting the origianal one makes it sorted for the next round of the backtracking 
+//so it will make the arrangement different fro the next round for backtracking
+//so always save it in the temp before any operation then save it to where ever u want
+//the original current will maintain the original structure as reqq!!! and the temp will help in opetaion and ans pushing in the base case
+ 
+
+
+solution....
+
+class Solution {
+public:
+    void helper(vector<int>&current,set<vector<int>>&myset,vector<int>& candidates,int target,int sum){
+        if(sum==target){
+            vector<int>temp=current;
+            sort(temp.begin(),temp.end());
+            myset.insert(temp);
+            return;
+        }
+        if(sum>target){
+            return;
+        }
+
+        if(sum<target){
+            for(int i=0;i<candidates.size();i++){
+                //over here adding the thigs
+                current.push_back(candidates[i]);
+                sum+=candidates[i];
+                //now over here we will be using the pop function
+                helper(current,myset,candidates,target,sum);
+                sum-=candidates[i];
+                current.pop_back();
+            }
+        }
+    }
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        //the algo
+        //get the element 
+        //explore all the possible element combo and also repeat 
+        //here no need to keep the track of anything
+        //just remember that whenever the sum>target just return
+        vector<int>current;
+        vector<vector<int>>ans;
+        set<vector<int>>myset;
+        int sum=0;
+        //now over here we will extract the things that we want
+        helper(current,myset,candidates,target,sum);
+        //from here we will take the things firther
+        //converting the result
+        for(auto const &element : myset){
+            ans.push_back(element);
+        }
+        return ans;
+    }
+};
