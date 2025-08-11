@@ -1,0 +1,28 @@
+// problem
+// given n find the number of set bits
+
+
+
+
+// class Solution {
+// public:
+//     int helper(int n){
+//         unsigned int number=n;
+//         string binary=bitset<32>(number).to_string();
+//         int ans=0;
+//         //now over here we can find other things
+//         for(auto i:binary){
+//             if(i=='1'){
+//                 ans++;
+//             }
+//         }
+//         return ans;
+//     }
+//     vector<int> countBits(int n) {
+//         vector<int>ans;
+//         for(int i=0;i<=n;i++){
+//             ans.push_back(helper(i));
+//         }
+//         return ans;
+//     }
+// };
