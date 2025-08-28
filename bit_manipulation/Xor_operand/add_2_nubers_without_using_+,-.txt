@@ -1,0 +1,52 @@
+PROBLEM
+371. Sum of Two Integers
+Solved
+Medium
+Topics
+premium lock iconCompanies
+
+Given two integers a and b, return the sum of the two integers without using the operators + and -.
+
+ 
+
+Example 1:
+
+Input: a = 1, b = 2
+Output: 3
+
+Example 2:
+
+Input: a = 2, b = 3
+Output: 5
+
+ 
+
+Constraints:
+
+    -1000 <= a, b <= 1000
+
+
+
+
+Solution
+class Solution {
+public:
+    int getSum(int a, int b) {
+        //so ultimately to add 2 number we have to remember a veryu simple rule of thumb
+        //get the first number and keep on using this as sum
+        //seconf number for the carry purpose till it becomes zero
+
+        while(b!=0){
+
+            unsigned int carry = (a&b)<<1;
+
+            //now finally lets generate the final results
+            sum here
+            a=a^b;
+            carry here
+            b=carry;
+        }
+
+        return a;
+    }
+};
