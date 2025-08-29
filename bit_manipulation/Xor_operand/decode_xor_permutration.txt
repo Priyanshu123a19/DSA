@@ -1,0 +1,78 @@
+1734. Decode XORed Permutation
+Solved
+Medium
+Topics
+premium lock iconCompanies
+Hint
+
+There is an integer array perm that is a permutation of the first n positive integers, where n is always odd.
+
+It was encoded into another integer array encoded of length n - 1, such that encoded[i] = perm[i] XOR perm[i + 1]. For example, if perm = [1,3,2], then encoded = [2,1].
+
+Given the encoded array, return the original array perm. It is guaranteed that the answer exists and is unique.
+
+ 
+
+Example 1:
+
+Input: encoded = [3,1]
+Output: [1,2,3]
+Explanation: If perm = [1,2,3], then encoded = [1 XOR 2,2 XOR 3] = [3,1]
+
+Example 2:
+
+Input: encoded = [6,5,4,6]
+Output: [2,4,1,5,3]
+
+ 
+
+Constraints:
+
+    3 <= n < 105
+    n is odd.
+    encoded.length == n - 1
+
+
+
+
+solution.......................................................................
+
+class Solution {
+public:
+    vector<int> decode(vector<int>& encoded) {
+        //now over here we can apply a  very simple yet effective logic that what to do in this scenario
+        //take the xor of all the elements till n because ultimatley we have the permustation of all the elements till n
+        //then in the encoded arrar take the xor sum of all the odd indices only 
+        //logic is that taking the xor of 1 index then it will give for 1 and 2 again for index 3 will give for 3 and 4 in this way
+        //we will leave the index[0] that was the first element of the permutation
+
+        //after getting the first element we can now finally decode the remaining one
+
+        //gettin the xor of all the n elements
+        int n=encoded.size();
+        int totalXor=1;
+        for(int i=2;i<=n+1;i++){
+            totalXor^=i;
+        }
+
+        //now getting the odd sum
+        int part=encoded[1];
+        for(int i=3;i<n;i+=2){
+            part^=encoded[i];
+        }
+
+        int first=totalXor^part;
+
+        //now we can decode all other things
+        vector<int>ans;
+        ans.push_back(first);
+        for(int i=0;i<n;i++){
+            int temp=first^encoded[i];
+            ans.push_back(temp);
+            first=temp;
+        }
+
+        return ans;
+    }
+
+};
