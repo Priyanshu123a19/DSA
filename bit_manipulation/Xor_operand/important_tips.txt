@@ -1,0 +1,28 @@
+//here we will be writing the main tips that we got in each of the question 
+
+1. the xor oparator has one special ability:::::::
+
+explaination
+
+a^b = c
+then c^a=b;
+and c^b=a;
+
+also suppose u are givern xor of n elements and u have to find one number missing and u have all the other number
+xor the nos that u have then again xor them with the main whole xor given u will get the missing no 
+
+2......
+the xor of multiple elements work on each of the ith bit
+..what i mean is
+if u take xor of n numbers then 
+the result ki ith bit will be the outcome of performing xoring the ith bit of all the numbers 
+//this is a very modular way to check the things
+
+
+
+3.......
+remeber that the shifting operators are a very good way of doing things in xor u will find multiple uses for it here
+bit masking is a preRequisite 
+
+
+4. the & operation is used to check weather the two number have same bits or Not

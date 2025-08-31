@@ -1,0 +1,117 @@
+2939. Maximum Xor Product
+Solved
+Medium
+Topics
+premium lock iconCompanies
+Hint
+
+Given three integers a, b, and n, return the maximum value of (a XOR x) * (b XOR x) where 0 <= x < 2n.
+
+Since the answer may be too large, return it modulo 109 + 7.
+
+Note that XOR is the bitwise XOR operation.
+
+ 
+
+Example 1:
+
+Input: a = 12, b = 5, n = 4
+Output: 98
+Explanation: For x = 2, (a XOR x) = 14 and (b XOR x) = 7. Hence, (a XOR x) * (b XOR x) = 98. 
+It can be shown that 98 is the maximum value of (a XOR x) * (b XOR x) for all 0 <= x < 2n.
+
+Example 2:
+
+Input: a = 6, b = 7 , n = 5
+Output: 930
+Explanation: For x = 25, (a XOR x) = 31 and (b XOR x) = 30. Hence, (a XOR x) * (b XOR x) = 930.
+It can be shown that 930 is the maximum value of (a XOR x) * (b XOR x) for all 0 <= x < 2n.
+
+Example 3:
+
+Input: a = 1, b = 6, n = 3
+Output: 12
+Explanation: For x = 5, (a XOR x) = 4 and (b XOR x) = 3. Hence, (a XOR x) * (b XOR x) = 12.
+It can be shown that 12 is the maximum value of (a XOR x) * (b XOR x) for all 0 <= x < 2n.
+
+
+
+solution..............................................................................................................................
+
+
+
+class Solution {
+public:
+    int maximumXorProduct(long long a, long long b, int n) {
+        //the algo is quite simple and explained at the end of the solution
+
+        long long MOD = 1e9 + 7;
+
+        long long final_a=a;
+        long long final_b=b;
+
+        for(int i=n-1;i>=0;i--){
+            //over here we make the bit mask
+            long long mask=1LL;
+
+            mask<<=i;
+
+            //getting the bit required of the number
+            bool bit_a=(final_a>>i)&1;
+            bool bit_b=(final_b>>i)&1;
+
+            //now over here we will be checking what to do accroding to the bits of a and b that we got
+            if(bit_a==bit_b){
+                //now over here we just make both of them one
+                final_a|=mask;
+                final_b|=mask;
+            }else{
+
+                if(final_a<final_b){
+                    //helping get a bigger
+                    final_a|=mask;
+                    final_b&=~mask;
+                }else{
+                    final_b|=mask;
+                    final_a&=~mask;
+                }
+            }
+        }
+
+        //getting the result a and the result b
+        long long aF=final_a%MOD;
+        long long bF=final_b%MOD;
+
+        return (aF*bF)%MOD;
+    }
+};
+
+
+
+
+explaination...........................
+
+
+The Logic Behind the Solution
+
+The goal is to maximize the product (a XOR x) * (b XOR x) by choosing an integer x where 0 <= x < 2^n.
+
+This constraint on x is key: it means we can only control the first n bits of x (from bit 0 to n-1). Any bit of x at position n or higher is always 0.
+
+To maximize a product, we want to make the two numbers involved as large as possible. The best way to make a number large in binary is to set its most significant bits (MSBs) to 1. This leads to a greedy approach: we should decide the bits of our two resulting numbers, let's call them res_a and res_b, from the MSB down to the LSB.
+
+Let's iterate from a high bit position (say, 50, given the constraints) down to 0.
+
+    Uncontrollable Bits (position i >= n):
+    For these high bits, the i-th bit of x must be 0. So, we have no choice: the i-th bits of our results are simply the i-th bits of the original a and b.
+
+    Controllable Bits (position i < n):
+    Here we can choose the i-th bit of x (x_i) to be 0 or 1. This choice affects both res_a and res_b.
+
+        Case A: The i-th bits of a and b are the same.
+        This is a win-win situation. If both a and b have a 0 at this bit, we can pick x_i = 1 to make the resulting bit 1 for both. If both have a 1, we pick x_i = 0 to make the resulting bit 1 for both. We can always make the i-th bit of both res_a and res_b equal to 1. This is the best greedy choice.
+
+        Case B: The i-th bits of a and b are different.
+        Now we have a trade-off. We can't make both resulting bits 1. One will get a 1 and the other a 0. To maximize the final product, it's generally better to make the two numbers closer in value. Since we are building the numbers from the MSB down, we can compare their values so far. The optimal strategy is to give the 1 to whichever number (res_a or res_b) is currently smaller to help it "catch up".
+
+By following this process from the MSB to the LSB, we greedily construct the two largest, closest possible numbers, which maximizes their product.
