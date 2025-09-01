@@ -1,0 +1,137 @@
+You are given an array nums of non-negative integers and an integer k.
+
+An array is called special if the bitwise OR of all of its elements is at least k.
+
+Return the length of the shortest special non-empty subarray of nums, or return -1 if no special subarray exists.
+
+ 
+
+Example 1:
+
+Input: nums = [1,2,3], k = 2
+
+Output: 1
+
+Explanation:
+
+The subarray [3] has OR value of 3. Hence, we return 1.
+
+Example 2:
+
+Input: nums = [2,1,8], k = 10
+
+Output: 3
+
+Explanation:
+
+The subarray [2,1,8] has OR value of 11. Hence, we return 3.
+
+Example 3:
+
+Input: nums = [1,2], k = 0
+
+Output: 1
+
+Explanation:
+
+The subarray [1] has OR value of 1. Hence, we return 1.
+
+
+
+
+solution...........................................................................................................
+
+
+
+
+class Solution {
+public:
+    int minimumSubarrayLength(vector<int>& nums, int k) {
+        int n=nums.size();
+        int left=0;
+        int minLen=INT_MAX;
+        vector<int>bits(32,0);
+
+        //now for each of the element first we will add it then only we will be proceeding
+        for(int i=0;i<n;i++){
+            //now first what we do
+            //make the set bits of the array as in accordance with the current number
+            for(int j=0;j<32;j++){
+                if((nums[i]>>j)&1){
+                    bits[j]++;
+                }
+            }
+
+            //now for that elment after its added we will check weather that makes the total or >=k
+
+            while(left<=i){
+                //checking the current or
+                int current_or=0;
+                for(int j=0;j<32;j++){
+                    if(bits[j]>0){
+                        current_or|=(1<<j);
+                    }
+                }
+
+                //now over here we can finally check if its good
+                if(current_or>=k){
+                    minLen=min(minLen,i-left+1);
+
+                    //now we can finally remove the elements from the list accordingly to get the complete solution to shrinnk the window\
+
+                    for(int j=0;j<32;j++){
+                        if((nums[left]>>j)&1){
+
+                            //now over here we will remove that bit count contributaion 
+                            bits[j]--;
+                        }
+                    }
+                    left++;
+                }else{
+                    break;
+                }
+            
+            }
+        }
+        return (minLen==INT_MAX)?-1:minLen;
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+approach............
+
+The Solution: Count the Bits!
+
+Instead of just storing the combined OR value, we can keep track of how many numbers in the current window contribute to each bit. We'll use a frequency array, let's say bit_counts[32], to store the counts for each of the 32 bits of an integer.
+
+Here's the refined algorithm:
+
+    Initialize two pointers, left = 0 and right = 0, a bit_counts array (all zeros), and a current_or = 0.
+
+    Expand: Move the right pointer through the array. For each new number nums[right]:
+
+        Iterate through its 32 bits. If the i-th bit is set, increment bit_counts[i].
+
+        After updating the counts, recalculate the current_or based on the bit_counts array. A bit i is set in current_or if bit_counts[i] > 0.
+
+    Shrink: As long as current_or >= k:
+
+        We have a valid window! We'll check if its length (right - left + 1) is a new minimum.
+
+        Now, we try to shrink the window by moving left forward.
+
+        Look at the number we are removing, nums[left]. Iterate through its 32 bits. If the i-th bit is set, decrement bit_counts[i].
+
+        Recalculate current_or. If a count bit_counts[i] dropped to 0, it means that bit might no longer be part of the window's OR.
+
+This way, both left and right pointers only move forward through the array once, making the solution much faster.
