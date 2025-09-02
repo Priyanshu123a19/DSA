@@ -1,0 +1,121 @@
+3133. Minimum Array End
+Solved
+Medium
+Topics
+premium lock iconCompanies
+Hint
+
+You are given two integers n and x. You have to construct an array of positive integers nums of size n where for every 0 <= i < n - 1, nums[i + 1] is greater than nums[i], and the result of the bitwise AND operation between all elements of nums is x.
+
+Return the minimum possible value of nums[n - 1].
+
+ 
+
+Example 1:
+
+Input: n = 3, x = 4
+
+Output: 6
+
+Explanation:
+
+nums can be [4,5,6] and its last element is 6.
+
+Example 2:
+
+Input: n = 2, x = 7
+
+Output: 15
+
+Explanation:
+
+nums can be [7,15] and its last element is 15.
+
+ 
+
+Constraints:
+
+    1 <= n, x <= 108
+
+solution...........................................................................
+
+
+
+class Solution {
+public:
+    long long minEnd(int n, int x) {
+        long long extra=0;
+        long long result=x;
+        long long k=n-1;
+
+        long long mask=1;
+        //logic....
+        //the first number itself is the minimum that is x
+        //then finally we can add the extra elements after the
+        //and also remember where the x set bits are there the n-1th element also should have the same all set bits
+
+        while(k>0){
+            //check if the current bit that the mask is trying to get to u is available or not
+            if((x&mask)==0){
+
+                //now check if the k allows that bit or not
+                if((k&1)==1){
+                    extra|=mask;
+                }
+            k>>=1;
+            }
+        mask<<=1;
+        }
+        //now just find the ans
+
+        return result+extra;
+    }
+};
+
+
+
+
+gemini code to understand;.................................................
+
+
+#include <iostream>
+
+long long getMinimumLastElement(int n, int x) {
+    // Start with x as our base. The final answer will be x plus an "extra part".
+    long long result = x;
+
+    // We need the n-th smallest "extra part". This corresponds to the (n-1)-th index.
+    // 'k' holds this index, which we'll deconstruct bit by bit.
+    long long k = n - 1;
+
+    // This will store the calculated "extra part" (B_{n-1}). It starts at 0.
+    long long b_to_add = 0;
+
+    // 'mask' checks each bit position one by one (1, 2, 4, 8, ...).
+    long long mask = 1;
+
+    // We continue as long as our index 'k' has bits left to process.
+    // If n=1, k=0, and this loop is skipped, correctly returning x.
+    while (k > 0) {
+        // Check if the current bit position in 'x' is a zero.
+        if ((x & mask) == 0) {
+            // This is an "allowed bit" for building our extra part.
+            
+            // Now, check if the current bit of our index 'k' is 1.
+            // This tells us if we should "use" this allowed bit.
+            if ((k & 1) == 1) {
+                // The index 'k' requires this bit, so turn it on in our extra part.
+                b_to_add |= mask;
+            }
+            
+            // We've processed the last bit of 'k', so shift to the next bit.
+            k >>= 1;
+        }
+
+        // Move the mask to check the next bit position.
+        mask <<= 1;
+    }
+
+    // The final answer is the base 'x' plus the calculated "extra part".
+    return result + b_to_add;
+}
