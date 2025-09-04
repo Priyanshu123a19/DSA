@@ -1,0 +1,5 @@
+////
+
+1.  remember that the values in the or operation on contiguous elements tells us that atleast one bit is set at that position in all that postion bits of all elements whome or u have taken
+2. remember that the and does the same thing but opposite.....it will show the set bit in the ans of all ands at the plaecs where all the bits of the participating element in the and operation were set
+3. combine them in a way for sliding window add with or and remove with and.
