@@ -1,0 +1,63 @@
+/* A binary tree Node
+class Node {
+  public:
+    int data;
+    Node* left;
+    Node* right;
+
+    // Constructor
+    Node(int val) {
+        data = val;
+        left = nullptr;
+        right = nullptr;
+    }
+};
+*/
+
+class Solution {
+  public:
+    vector<vector<int>> levelOrder(Node *root) {
+        // code here
+        //just to make sure i am wrting the algo
+        //make a vector<vector to store the ans
+        //same queue logic
+        queue<Node*>q;
+        vector<vector<int>>ans;
+        if(root==NULL){
+            return ans;
+        }
+        
+        //now over here to store the ans
+        q.push(root);
+        q.push(NULL);
+        vector<int>semi;
+        
+        while(!q.empty()){
+            //take the first element 
+            Node* temp=q.front();
+            q.pop();
+            //now according to the element we will decide what to do
+            if(temp==NULL){
+                //now in this case 
+                ans.push_back(semi);
+                semi.clear();
+                if(!q.empty()){
+                    q.push(NULL);
+                }
+            }
+            else{
+                semi.push_back(temp->data);
+                
+                //similarly push
+                if(temp->left){
+                q.push(temp->left);
+                }
+                if(temp->right){
+                q.push(temp->right);
+                }
+            }
+        }
+        return ans;
+        
+    }
+};
