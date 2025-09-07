@@ -1,0 +1,37 @@
+//only logic now
+
+
+void level_order(Node* root){
+    queue<Node&>q;
+
+    //just enter the data for the root node
+    cout<<"enter the data for the root node"<<endl;
+    int data;
+    cin>>data;
+
+    root=new Node(data);
+    q.push(*root);
+
+    while(!q.empty()){
+        Node* temp=q.front();
+        q.pop();
+
+        cout<<"enter the data for the left node of current node";
+        int data1;
+        cin>>data1;
+
+        if(data!=-1){
+            temp->Left=new Node(data1);
+            q.push(*(temp->Left));
+        }
+
+        cout<<"enter the data for the right node of current node";
+        int data2;
+        cin>>data2;
+
+        if(data2!=-1){
+            temp->Right=new Node(data2);
+            q.push(*(temp->Right));
+        }
+    }
+}
