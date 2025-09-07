@@ -1,0 +1,95 @@
+Given a binary tree, determine if it is
+
+.
+
+ 
+
+Example 1:
+
+Input: root = [3,9,20,null,null,15,7]
+Output: true
+
+Example 2:
+
+Input: root = [1,2,2,3,3,null,null,4,4]
+Output: false
+
+Example 3:
+
+Input: root = []
+Output: true
+
+ 
+
+Constraints:
+
+    The number of nodes in the tree is in the range [0, 5000].
+    -104 <= Node.val <= 104
+
+
+
+
+
+my solution...............................................(zyda optimized hai bhai)
+
+// class Solution {
+// public: 
+//     int helper(TreeNode* root,bool &var){
+//         if(root==NULL){
+//             return 0;
+//         }
+
+//         int left=helper(root->left,var);
+//         int right=helper(root->right,var);
+
+//         //over here i will check the things
+//         if(abs(left-right)>1){
+//             var=false;
+//         }
+//         return max(left,right)+1;
+//     }
+//     bool isBalanced(TreeNode* root) {
+//         //heght on left and right subtree diff not be greater that 1
+
+//         bool temp=true;
+//         helper(root,temp);
+
+//         return temp;
+//     }
+// };
+
+
+
+
+solution 2............................................................................................................(method of worship)
+
+class Solution {
+public: 
+    int helper(TreeNode* root){
+        if(root==NULL){
+            return 0;
+        }
+
+        int left=helper(root->left);
+        int right=helper(root->right);
+
+        //over here i will check the things
+        return max(left,right)+1;
+    }
+    bool isBalanced(TreeNode* root) {
+        //heght on left and right subtree diff not be greater that 1
+        if(root==NULL){
+            return true;
+        }
+
+        bool first=isBalanced(root->left);
+        bool second=isBalanced(root->right);
+
+        bool third=abs(helper(root->left)-helper(root->right))<=1;
+
+        if(first && second && third){
+            return true;
+        }
+        return false;
+    }
+};
