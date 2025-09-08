@@ -1,0 +1,80 @@
+
+
+Given a Binary Tree. Check for the Sum Tree for every node except the leaf node. Return true if it is a Sum Tree otherwise, return false.
+
+    A SumTree is a Binary Tree where the value of a node is equal to the sum of the nodes present in its left subtree and right subtree. An empty tree is also a Sum Tree as the sum of an empty tree can be considered to be 0. A leaf node is also considered a Sum Tree.
+
+Examples:
+
+Input:
+    3
+  /   \    
+ 1     2
+Output: true
+Explanation: The sum of left subtree and right subtree is 1 + 2 = 3, which is the value of the root node. Therefore,the given binary tree is a sum tree.
+
+Input:
+          10
+        /    \
+      20      30
+    /   \ 
+   10    10
+Output: false
+Explanation: The given tree is not a sum tree. For the root node, sum of elements in left subtree is 40 and sum of elements in right subtree is 30. Root element = 10 which is not equal to 30+40.
+
+Input:
+   25
+  /   \    
+ 9     15
+Output: false
+
+Constraints:
+2 ≤ number of nodes ≤ 105
+1 ≤ node->data ≤ 105
+
+
+
+
+
+solution............................................................................................................................
+
+/*  Tree node
+struct Node
+{
+    int data;
+    Node* left, * right;
+}; */
+
+// Should return true if tree is Sum Tree, else false
+class Solution {
+    int helper(Node * root,bool &temp){
+        if(root->left==NULL && root->right==NULL){
+            return root->data;
+        }
+        
+        //after base case check for the condition where the values are summed
+        int Lsum=0;
+        int Rsum=0;
+        
+        if(root->left!=NULL){
+            Lsum=helper(root->left,temp);
+        }
+        if(root->right!=NULL){
+            Rsum=helper(root->right,temp);
+        }
+        
+        if((Lsum+Rsum)!=root->data){
+            temp=false;
+        }
+        
+        return Lsum+Rsum+root->data;
+        
+    }
+  public:
+    bool isSumTree(Node* root) {
+        // Your code here
+        bool temp=true;
+        helper(root,temp);
+        return temp;
+    }
+};
