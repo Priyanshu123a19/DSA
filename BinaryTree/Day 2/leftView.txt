@@ -1,0 +1,96 @@
+Left View of Binary Tree
+Difficulty: EasyAccuracy: 33.74%Submissions: 578K+Points: 2Average Time: 20m
+
+Given the root of a binary tree. Your task is to return the left view of the binary tree. The left view of a binary tree is the set of nodes visible when the tree is viewed from the left side.
+
+If the tree is empty, return an empty list.
+
+Examples :
+
+Input: root[] = [1, 2, 3, 4, 5, N, N]
+
+Output: [1, 2, 4]
+Explanation: From the left side of the tree, only the nodes 1, 2, and 4 are visible.
+
+Input: root[] = [1, 2, 3, N, N, 4, N, N, 5, N, N]
+
+Output: [1, 2, 4, 5]
+Explanation: From the left side of the tree, the nodes 1, 2, 4, and 5 are visible.
+
+Constraints:
+0 <= number of nodes <= 106
+0 <= node -> data <= 105
+
+
+
+
+solution.......................................................................................................
+
+/*
+
+class Node {
+public:
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int val) {
+        data = val;
+        left = nullptr;
+        right = nullptr;
+    }
+};
+ */
+
+class Solution {
+  public:
+    vector<int> leftView(Node *root) {
+        // code here
+        //for the left view of the binary tree we wil be doinf the same approac catch the firwt elemetn of that level
+        vector<int>ans;
+        if(root==NULL){
+            return ans;
+        }
+        
+        //qeueu for the level order conaining the node and its current level
+        queue<pair<Node*,int>>q;
+        
+        //map to storr the left view elements along with their levels
+        map<int,int>mp;
+        
+        q.push({root,0});
+        
+        while(!q.empty()){
+            
+            //extract the first element
+            Node* first=q.front().first;
+            //getting its level
+            
+            int lvl=q.front().second;
+            
+            //now over to pop
+            q.pop();
+            
+            //checkng the current state of this element
+            if(mp.find(lvl)==mp.end()){
+                //push it back
+                mp[lvl]=first->data;
+            }
+            
+            //now passing to the left side first then the right side
+            
+            if(first->left!=NULL){
+                q.push({first->left,lvl+1});
+            }
+            if(first->right!=NULL){
+                q.push({first->right,lvl+1});
+            }
+        }
+        
+        for(auto i:mp){
+            ans.push_back(i.second);
+        }
+        
+        return ans;
+    }
+};
