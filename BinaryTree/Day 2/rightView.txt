@@ -1,0 +1,61 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> rightSideView(TreeNode* root) {
+        vector<int>ans;
+        if(root==NULL){
+            return ans;
+        }
+        
+        //qeueu for the level order conaining the node and its current level
+        queue<pair<TreeNode*,int>>q;
+        
+        //map to storr the left view elements along with their levels
+        map<int,int>mp;
+        
+        q.push({root,0});
+        
+        while(!q.empty()){
+            
+            //extract the first element
+            TreeNode* first=q.front().first;
+            //getting its level
+            
+            int lvl=q.front().second;
+            
+            //now over to pop
+            q.pop();
+            
+            //checkng the current state of this element
+            if(mp.find(lvl)==mp.end()){
+                //push it back
+                mp[lvl]=first->val;
+            }
+            
+            //now passing to the left side first then the right side
+            
+            if(first->right!=NULL){
+                q.push({first->right,lvl+1});
+            }
+            if(first->left!=NULL){
+                q.push({first->left,lvl+1});
+            }
+        }
+        
+        for(auto i:mp){
+            ans.push_back(i.second);
+        }
+        
+        return ans;
+    }
+};
