@@ -1,0 +1,89 @@
+Maximum sum of Non-adjacent nodes
+Difficulty: MediumAccuracy: 55.35%Submissions: 93K+Points: 4Average Time: 45m
+
+Given a root of binary tree with a value associated with each node. Your task is to select a subset of nodes such that the sum of their values is maximized, with the condition that no two selected nodes are directly connected that is, if a node is included in the subset, neither its parent nor its children can be included.
+
+Examples:
+
+Input: root = [11, 1, 2]
+
+Output: 11
+Explanation: The maximum sum is obtained by selecting the node 11.
+
+Input: root = [1, 2, 3, 4, N, 5, 6]
+
+Output: 16
+Explanation: The maximum sum is obtained by selecting the nodes 1, 4, 5, and 6, which are not directly connected to each other. Their total sum is 16.  
+
+Constraints:
+1 ≤ no. of nodes in the tree ≤ 104
+1 ≤ Node.val ≤ 105
+
+
+
+solution................................................................................................................
+
+
+/*
+class Node {
+public:
+    int data;
+    Node* left;
+    Node* right;
+    Node(int val) {
+        data = val;
+        left = nullptr;
+        right = nullptr;
+    }
+};
+*/
+class Solution {
+  public:
+  
+    pair<int,int> helper(Node* root){
+        //base case
+        if(root==NULL){
+            return {0,0};
+        }
+        
+        //first value for included and second one for not included
+        pair<int,int>Lsum=helper(root->left);
+        pair<int,int>Rsum=helper(root->right);
+        //get the left sum and the right sum then finally get the ans
+        
+        int Included=root->data+Lsum.second+Rsum.second;
+        
+        //not not included u can chose the max of both
+        int NIncluded=max(Lsum.first,Lsum.second)+max(Rsum.first,Rsum.second);
+        
+        return {Included,NIncluded};
+        
+    }
+    int getMaxSum(Node *root) {
+       //now over here we need permutation and combination coz we cant predict when do we have more values in ther
+       //algo
+       //go for the frst node
+       //get the current node selected or not selected 
+       //then go for the final ans comparision
+       //which sum is greater than the prev one
+       if(root==NULL){
+           return 0;
+       }
+       
+       //now the next condition for the single node
+       if(root->left==NULL && root->right==NULL){
+           return root->data;
+       }
+       
+       //now the final helper function is a recursive function 
+       pair<int,int>ans=helper(root);
+       
+       return max(ans.first,ans.second);
+       
+       
+        
+    }
+};
+
+
+
