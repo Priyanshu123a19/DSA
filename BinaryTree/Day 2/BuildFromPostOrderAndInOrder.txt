@@ -1,0 +1,103 @@
+106. Construct Binary Tree from Inorder and Postorder Traversal
+Solved
+Medium
+Topics
+premium lock iconCompanies
+
+Given two integer arrays inorder and postorder where inorder is the inorder traversal of a binary tree and postorder is the postorder traversal of the same tree, construct and return the binary tree.
+
+ 
+
+Example 1:
+
+Input: inorder = [9,3,15,20,7], postorder = [9,15,7,20,3]
+Output: [3,9,20,null,null,15,7]
+
+Example 2:
+
+Input: inorder = [-1], postorder = [-1]
+Output: [-1]
+
+ 
+
+Constraints:
+
+    1 <= inorder.length <= 3000
+    postorder.length == inorder.length
+    -3000 <= inorder[i], postorder[i] <= 3000
+    inorder and postorder consist of unique values.
+    Each value of postorder also appears in inorder.
+    inorder is guaranteed to be the inorder traversal of the tree.
+    postorder is guaranteed to be the postorder traversal of the tree.
+
+ 
+Seen this question in a real interview before?
+1/5
+Yes
+No
+Accepted
+8,56,851/1.3M
+Acceptance Rate
+66.9%
+
+
+
+solution..................................................................................................................
+
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+     TreeNode* helper(vector<int> &postorder, vector<int> &inorder,int &index,int inOrderStart,int inOrderLast,map<int,int>&mp,int n){
+        //now over here we can update more elements and add them and then again call the recurion to build out their left and rifht part
+        if(index>n || inOrderStart>inOrderLast){
+            return NULL;
+        }
+
+        //getting the current node ready
+        int element=postorder[index--];
+        int position = mp[element];
+        TreeNode* root=new TreeNode(element);
+
+        //now get the right and left part for it
+        root->right=helper(postorder,inorder,index,position+1,inOrderLast,mp,n);
+        root->left=helper(postorder,inorder,index,inOrderStart,position-1,mp,n);
+
+        return root;
+    }
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        //same code as earlier
+        //just the same logic
+         map<int,int>NodeToIndex;
+        int n= inorder.size();
+        for(int i=0;i<n;i++){
+            //now over here we can get more of these things done
+            NodeToIndex[inorder[i]]=i;
+        }
+
+        //now finally we can the main function called
+        //algo
+        //start with the first and last node bound in the inorder
+        //get the current element from the preorder
+        //make a new node and insert it
+        //insert it
+        //recursino call from the start bound till this current element indecx in the inorder
+        //recursive call from the this element index+1 till end of the bound
+        //thats all
+        int index=n-1;
+        TreeNode* ans=helper(postorder,inorder,index,0,n-1,NodeToIndex,n);
+        return ans;
+        
+
+    }
+};
