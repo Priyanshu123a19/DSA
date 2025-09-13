@@ -1,0 +1,109 @@
+Flatten binary tree to linked list
+Difficulty: MediumAccuracy: 75.82%Submissions: 46K+Points: 4
+
+Given the root of a binary tree, flatten the tree into a "Linked list":
+
+    The "linked list" should use the same Node class where the right child pointer points to the next node in the list and the left child pointer is always null.
+    The "linked list" should be in the same order as a pre-order traversal of the binary tree.
+
+Examples:
+
+Input: 
+          1
+        /   \
+       2     5
+      / \     \
+     3   4     6
+Output : 1 2 3 4 5 6 
+ 
+Explanation: After flattening, the tree looks like this - 
+     1
+      \
+       2
+        \
+         3
+          \
+           4
+            \ 
+             5 
+              \
+               6
+Here, left of each node points to NULL and right contains the next node in preorder.The inorder traversal of this flattened tree is 1 2 3 4 5 6.
+
+Input :
+        1
+       / \
+      3   4
+         /
+        2
+         \
+          5 
+Output : 
+1 3 4 2 5 
+Explanation : After flattening, the tree looks like this -
+     1
+      \
+       3
+        \
+         4
+          \
+           2
+            \ 
+             5 
+Here, left of each node points to NULL and right contains the next node in preorder.The inorder traversal of this flattened tree is 1 3 4 2 5.
+
+Expected Time Complexity: O(n)
+Expected Space Complexity: O(1)
+
+
+solution...................................................................................................................................................................
+
+
+
+// User function Template for C++
+
+class Solution {
+  public:
+    void flatten(Node *root) {
+        // code here
+        //over here we will be usnig the morris traversal
+        //itna sochna mat bas dekh aur kar
+        
+        //NLR ye wala traversal chahiye 
+        //ALGO
+        //current node as root
+        //agar left hai toh uska pred nikal same way me aur usko naam prev dede
+        //prev mil jaye toh usko current ke right ki traf and current ke right ko current ke left ki traf kr de
+        //finally ab right hi left h current ke liye
+        //toh left me aaja 
+        //process contunues
+        
+        Node* current=root;
+        while(current!=NULL){
+            //getting to see if left exists
+            if(current->left==NULL){
+                current=current->right;
+            }
+            
+            //now getting the pred and doing NLR
+            else{
+                Node* prev=current->left;
+                while(prev->right!=NULL){
+                    prev=prev->right;
+                }
+                //now just swap things up
+                prev->right=current->right;
+                current->right=current->left;
+                current=current->right;
+            }
+        }
+        
+        //remove all the left pointers
+        Node* curr=root;
+        while(curr!=NULL){
+            curr->left=NULL;
+            curr=curr->right;
+        }
+
+    }
+};
