@@ -1,0 +1,145 @@
+Burning Tree
+Difficulty: HardAccuracy: 53.53%Submissions: 126K+Points: 8
+
+Given a binary tree and a target node, determine the minimum time required to burn the entire tree if the target node is set on fire. In one second, the fire spreads from a node to its left child, right child, and parent.
+Note: The tree contains unique values.
+
+Examples : 
+
+Input: root[] = [1, 2, 3, 4, 5, 6, 7], target = 2
+  
+Output: 3
+Explanation: Initially 2 is set to fire at 0 sec 
+At 1 sec: Nodes 4, 5, 1 catches fire.
+At 2 sec: Node 3 catches fire.
+At 3 sec: Nodes 6, 7 catches fire.
+It takes 3s to burn the complete tree.
+
+Input: root[] = [1, 2, 3, 4, 5, N, 7, 8, N, 10], target = 10
+
+Output: 5
+Explanation: Initially 10 is set to fire at 0 sec 
+At 1 sec: Node 5 catches fire.
+At 2 sec: Node 2 catches fire.
+At 3 sec: Nodes 1 and 4 catches fire.
+At 4 sec: Node 3 and 8 catches fire.
+At 5 sec: Node 7 catches fire.
+It takes 5s to burn the complete tree.
+
+
+solution..........................................................................................................................................
+
+
+
+/*
+class Node {
+  public:
+    int data;
+    Node *left;
+    Node *right;
+
+    Node(int val) {
+        data = val;
+        left = right = NULL;
+    }
+};
+*/
+class Solution {
+  public:
+    Node* nodeToParent(Node*root,map<Node*,Node*>&mp,int target){
+        //now over here we try to find the target node as well as the mapping in the level order traversal
+        Node* result=NULL;
+        
+        queue<Node*>q;
+        q.push(root);
+        mp[root]=NULL;
+        while(!q.empty()){
+            Node* front=q.front();
+            q.pop();
+            
+            //now lets try to find the things we need
+            if(front->data==target){
+                //pushing it as the ans
+                result=front;
+            }
+            
+            if(front->left!=NULL){
+                mp[front->left]=front;
+                q.push(front->left);
+            }
+            if(front->right!=NULL){
+                mp[front->right]=front;
+                q.push(front->right);
+            }
+        }
+        return result;
+    }
+    
+    int BurnTree(Node* root,map<Node*,Node*>&mp){
+        map<Node*,bool>visited;
+        queue<Node*>q;
+        
+        q.push(root);
+        visited[root]=true;
+        int ans=0;
+        while(!q.empty()){
+            //find the current series of element that are pushed by the prev element
+            //find the left ,right ,paretnt for them
+            //check they are visited or not
+            //burn them accordingly and inc the time
+            int size=q.size();
+            //boolean flag to check weather any node was burned for the current node 
+            //if yes we make the flag true and then at the end of conditions we incrimnet the time
+            
+            bool flag=false;
+            for(int i=0;i<size;i++){
+                //now over here we will add the elements 
+                
+                //same procedure as the level order
+                Node* front=q.front();
+                q.pop();
+                
+                //condition 1 for left
+                if(front->left!=NULL && visited[front->left]==false){
+                    q.push(front->left);
+                    visited[front->left]=true;
+                    flag=true;
+                }
+                //condition 2 for right
+                if(front->right!=NULL && visited[front->right]==false){
+                    q.push(front->right);
+                    visited[front->right]=true;
+                    flag=true;
+                }
+                //condition 3 for parent
+                if(mp[front]!=NULL && visited[mp[front]]==false){
+                    q.push(mp[front]);
+                    visited[mp[front]]=true;
+                    flag=true;
+                }
+                
+            }
+            //now after the loop ends and u check the flag thats the thing
+            if(flag){
+                ans++;
+            }
+        }
+        return ans;
+    }
+    int minTime(Node* root, int target) {
+        // code here
+        
+        //first we need to craete a node to parent mapping
+        //get the target node
+        //start burning the tree using the visited mapping and the queue
+        map<Node*,Node*>mp;
+        
+        Node* temp=nodeToParent(root,mp,target);
+        
+        //finally getting the ans
+        int ans=BurnTree(temp,mp);
+        return ans;
+        
+        
+    }
+};
