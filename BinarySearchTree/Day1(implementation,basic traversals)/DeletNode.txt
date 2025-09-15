@@ -1,0 +1,130 @@
+450. Delete Node in a BST
+Solved
+Medium
+Topics
+premium lock iconCompanies
+
+Given a root node reference of a BST and a key, delete the node with the given key in the BST. Return the root node reference (possibly updated) of the BST.
+
+Basically, the deletion can be divided into two stages:
+
+    Search for a node to remove.
+    If the node is found, delete the node.
+
+ 
+
+Example 1:
+
+Input: root = [5,3,6,2,4,null,7], key = 3
+Output: [5,4,6,2,null,null,7]
+Explanation: Given key to delete is 3. So we find the node with value 3 and delete it.
+One valid answer is [5,4,6,2,null,null,7], shown in the above BST.
+Please notice that another valid answer is [5,2,6,null,4,null,7] and it's also accepted.
+
+Example 2:
+
+Input: root = [5,3,6,2,4,null,7], key = 0
+Output: [5,3,6,2,4,null,7]
+Explanation: The tree does not contain a node with value = 0.
+
+Example 3:
+
+Input: root = [], key = 0
+Output: []
+
+ 
+
+Constraints:
+
+    The number of nodes in the tree is in the range [0, 104].
+    -105 <= Node.val <= 105
+    Each node has a unique value.
+    root is a valid binary search tree.
+    -105 <= key <= 105
+
+ 
+
+Follow up: Could you solve it with time complexity O(height of tree)?
+
+
+
+solutoin................................................................................................................
+
+
+
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* minVal(TreeNode* root){
+        if(root->left==NULL){
+            return root;
+        }
+        return minVal(root->left);
+    }
+    TreeNode* helper(TreeNode* root,int val){
+        if(root==NULL){
+            return root;
+        }
+
+        //found the node
+        if(root->val==val){
+            //deletionlogic
+
+            //logic 1 (deleting the node that has 0 children)
+            if(root->right==NULL && root->left==NULL){
+                delete root;
+                return NULL;
+            }
+            if(root->left !=NULL && root->right==NULL){
+                //simple make em the current node
+                TreeNode* temp=root->left;
+                delete root;
+                return temp;   
+            }
+            if(root->right !=NULL && root->left==NULL){
+                //simple make em the current node
+                TreeNode* temp=root->right;
+                delete root;
+                return temp;   
+            }
+
+            //last case having 2 bacche
+            if(root->left!=NULL && root->right!=NULL){
+                //in this case we take the values that are required only
+                //opt1 find the smallest right one 
+                //opt2 find the largest left one
+                int data=minVal(root->right)->val;
+                //now just exchange the values
+                root->val=data;
+                root->right=helper(root->right,data);
+            }
+
+        }
+
+        //next few logics we are trying to get
+        if(root->val>val){
+            //go to the left side
+            root->left=helper(root->left,val);
+            return root;
+        }
+        else{
+            root->right=helper(root->right,val);
+            return root;
+        }
+    }
+    TreeNode* deleteNode(TreeNode* root, int key) {
+       
+        return helper(root,key);
+    }
+};
