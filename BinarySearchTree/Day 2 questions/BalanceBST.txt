@@ -1,0 +1,88 @@
+1382. Balance a Binary Search Tree
+Solved
+Medium
+Topics
+premium lock iconCompanies
+Hint
+
+Given the root of a binary search tree, return a balanced binary search tree with the same node values. If there is more than one answer, return any of them.
+
+A binary search tree is balanced if the depth of the two subtrees of every node never differs by more than 1.
+
+ 
+
+Example 1:
+
+Input: root = [1,null,2,null,3,null,4,null,null]
+Output: [2,1,3,null,null,null,4]
+Explanation: This is not the only correct answer, [3,1,4,null,2] is also correct.
+
+Example 2:
+
+Input: root = [2,1,3]
+Output: [2,1,3]
+
+ 
+
+Constraints:
+
+    The number of nodes in the tree is in the range [1, 104].
+    1 <= Node.val <= 105
+
+
+
+solutoin........................................................................................................
+
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* maker(vector<TreeNode*>&ans,int s,int e){
+        if(s>e){
+            return NULL;
+        }
+
+        //now over here make a new node
+        int mid=s+(e-s)/2;
+        TreeNode* root=ans[mid];
+
+        //now just attach the left and right nodes
+        root->left=maker(ans,s,mid-1);
+        root->right=maker(ans,mid+1,e);
+
+        return root;
+    }
+    void helper(TreeNode* root,vector<TreeNode*>&ans){
+        if(root==NULL){
+            return;
+        }
+
+        helper(root->left,ans);
+        ans.push_back(root);
+        helper(root->right,ans);
+    }
+    TreeNode* balanceBST(TreeNode* root) {
+        //balancing the bast
+        //get the inorder 
+        //then get mid call recuirsion add the left and right to the mid
+
+        if(root==NULL){
+            return NULL;
+        }
+        vector<TreeNode*>ans;
+        helper(root,ans);
+
+        //now over here we have got the correct value for the ans as it is sorted now just get the central node and repeat the algo as above
+        return maker(ans,0,ans.size()-1);
+    }
+};
