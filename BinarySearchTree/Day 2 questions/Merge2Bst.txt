@@ -1,0 +1,126 @@
+#include <vector>
+#include <unordered_map>
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ * int val;
+ * TreeNode *left;
+ * TreeNode *right;
+ * TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ * TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ * TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* canMerge(vector<TreeNode*>& trees) {
+        // A map for O(1) lookup of sub-trees by their root's value.
+        unordered_map<int, TreeNode*> valToRoot;
+        // A map to count the "in-degree" of each node value.
+        unordered_map<int, int> inDegree;
+        long initialNodeCount = 0;
+
+        for (TreeNode* root : trees) {
+            // Check for duplicate root values, which makes merging ambiguous.
+            if (valToRoot.count(root->val)) return nullptr;
+            valToRoot[root->val] = root;
+            
+            initialNodeCount++; // Count the root
+            if (root->left) {
+                inDegree[root->left->val]++;
+                initialNodeCount++;
+            }
+            if (root->right) {
+                inDegree[root->right->val]++;
+                initialNodeCount++;
+            }
+        }
+
+        // --- Step 1: Find the Final Root ---
+        TreeNode* finalRoot = nullptr;
+        for (TreeNode* root : trees) {
+            // The final root has an in-degree of 0.
+            if (inDegree.find(root->val) == inDegree.end()) {
+                if (finalRoot != nullptr) {
+                    return nullptr; // Found more than one possible root.
+                }
+                finalRoot = root;
+            }
+        }
+
+        if (finalRoot == nullptr) {
+            return nullptr; // No root found (e.g., a cycle).
+        }
+
+        // --- Step 2: Assemble the Tree ---
+        // The final root is the starting point, not a tree to be merged in.
+        valToRoot.erase(finalRoot->val); 
+        performMerge(finalRoot, valToRoot);
+
+        // --- Step 3: Validate the Result ---
+        // Check 1: All sub-trees must have been used.
+        if (!valToRoot.empty()) {
+            return nullptr;
+        }
+
+        // Check 2 & 3: The merged tree must be a valid BST and have the correct node count.
+        long long prevVal = -1; // Node values are >= 1, so -1 is a safe starting point.
+        long finalNodeCount = 0;
+        if (isValidBST(finalRoot, prevVal, finalNodeCount)) {
+            // Expected nodes = initial count minus the merged-away leaf nodes.
+            long expectedNodeCount = initialNodeCount - (trees.size() - 1);
+            if (finalNodeCount == expectedNodeCount) {
+                return finalRoot;
+            }
+        }
+
+        return nullptr; // Failed validation.
+    }
+
+private:
+    // Recursively traverses the tree, attaching sub-trees at leaf nodes.
+    void performMerge(TreeNode* node, unordered_map<int, TreeNode*>& valToRoot) {
+        if (node == nullptr) {
+            return;
+        }
+
+        // If it's a leaf node that can be merged...
+        if (node->left == nullptr && node->right == nullptr) {
+            if (valToRoot.count(node->val)) {
+                TreeNode* subTreeToAttach = valToRoot[node->val];
+                node->left = subTreeToAttach->left;
+                node->right = subTreeToAttach->right;
+                valToRoot.erase(node->val);
+            }
+        }
+        
+        // Continue the merge process down the tree.
+        performMerge(node->left, valToRoot);
+        performMerge(node->right, valToRoot);
+    }
+
+    // Performs an in-order traversal to validate the BST property.
+    // Also counts the nodes in the final tree to detect cycles.
+    bool isValidBST(TreeNode* node, long long& prev, long& count) {
+        if (node == nullptr) {
+            return true;
+        }
+        
+        count++;
+
+        // Check left subtree
+        if (!isValidBST(node->left, prev, count)) {
+            return false;
+        }
+
+        // Check current node
+        if (prev != -1 && node->val <= prev) {
+            return false;
+        }
+        prev = node->val;
+
+        // Check right subtree
+        return isValidBST(node->right, prev, count);
+    }
+};
