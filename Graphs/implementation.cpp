@@ -1,33 +1,38 @@
-#include<bits/stdc++.h>
+#include<iostream>
+#include<unordered_map>
+#include<list>
 using namespace std;
 
 
-//now making up the class 
 class graph{
-    public :
+    public:
     unordered_map<int,list<int>> adj;
 
+    //now over here we need fucntioun to add edges
     void addEdge(int u,int v,bool direction){
-        //now first we will add the new edge into the adjecency list
         adj[u].push_back(v);
-        //now if the graph is undirected then we will add the edge from v to u
-        if(direction==0){
+
+        if(direction){
             adj[v].push_back(u);
         }
     }
 
+
+    //function to print the edges and the nodes of the graph
     void printAdj(){
-        for(auto i:adj){
-            cout<<i.first<<"->";
-            for(auto j:i.second){
-                cout<<j<<", ";
-            }
-            cout<<endl;
+    for(auto i:adj){
+        cout<<i.first<<"->";
+        for(auto j:i.second){
+            cout<<j<<",";
         }
+        cout<<endl;
     }
+}
 };
 
+//now the main function to tet
 int main(){
+    graph g;
     int n;
     cout<<"Enter the number of nodes"<<endl;
     cin>>n;
@@ -35,12 +40,16 @@ int main(){
     cout<<"Enter the number of edges"<<endl;
     cin>>m;
 
-    graph g;
+    //now we will make a loop to add the edges
     for(int i=0;i<m;i++){
         int u,v;
+        cout<<"Enter the u and v values"<<endl;
         cin>>u>>v;
-        g.addEdge(u,v,0);
+        g.addEdge(u,v,0); //0 for undirected graph
     }
 
+    //now just printing the adjaceny list
     g.printAdj();
+
+    return 0;
 }
